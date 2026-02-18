@@ -1,5 +1,6 @@
 "use client";
 
+"use client";
 import Link from "next/link"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
@@ -18,10 +19,14 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     setError("");
-    // Mock API call (replace with your real API endpoint)
-    await new Promise((res) => setTimeout(res, 1000));
-    if (email === "user@example.com" && password === "password") {
-      // On success, redirect or set auth state
+    // Check user from localStorage (for demo only)
+    let users = [];
+    try {
+      users = JSON.parse(localStorage.getItem("wg_users") || "[]");
+    } catch {}
+    const user = users.find((u: any) => u.email === email && u.password === password);
+    await new Promise((res) => setTimeout(res, 500));
+    if (user) {
       router.push("/features");
     } else {
       setError("Invalid email or password");

@@ -1,5 +1,6 @@
 "use client";
 
+"use client";
 import Link from "next/link"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
@@ -28,9 +29,21 @@ export default function SignupPage() {
       setLoading(false);
       return;
     }
-    // Mock API call (replace with your real API endpoint)
-    await new Promise((res) => setTimeout(res, 1000));
+    // Save user to localStorage (for demo only)
     if (email && password && firstName && lastName) {
+      const user = { firstName, lastName, email, password };
+      let users = [];
+      try {
+        users = JSON.parse(localStorage.getItem("wg_users") || "[]");
+      } catch {}
+      // Check if user already exists
+      if (users.some((u: any) => u.email === email)) {
+        setError("User already exists with this email");
+        setLoading(false);
+        return;
+      }
+      users.push(user);
+      localStorage.setItem("wg_users", JSON.stringify(users));
       setSuccess("Account created! Redirecting to login...");
       setTimeout(() => router.push("/login"), 1500);
     } else {
